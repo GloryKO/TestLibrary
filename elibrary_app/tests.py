@@ -8,7 +8,11 @@ from .models import Catalogue
 
 class ElibraryURLsTest(SimpleTestCase):
     def test_homepage_url(self):
-        response = self.client.get(reverse)
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code,200)
+        
+    def test_root_url_resloves_to_homepage_view(self):
+        found = resolve('/')
 
 class CatalogueModelTest(TestCase):
 
