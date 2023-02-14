@@ -2,10 +2,30 @@ from django.shortcuts import render
 
 from .forms import AddBookForm
 
+from .models import Catalogue
+
 def home(request):
 
-    add_book_form = AddBookForm()
+    
+    # Save a new book to the catalogue
+    if request.method == 'POST':
 
-    return render(request, 'index.html', {
+        add_book_form = AddBookForm(data=request.POST)
+
+        # check if the form is valid
+        if add_book_form.is_valid():
+            add_book_form.save()
+    else:
+        add_book_form=AddBookForm()
+        
+    # Get all books from the catalogue
+    books = Catalogue.objects.all()
+
+    # Show the empty form for users to fill
+    add_book_form = AddBookForm()   
+
+
+    return render(request, 'home.html', {
         "add_book_form": add_book_form,
+        "books": books
     })

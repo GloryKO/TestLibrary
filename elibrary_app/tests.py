@@ -5,9 +5,42 @@ from .views import home
 from .forms import AddBookForm
 # Create your tests here.
 from .models import Catalogue 
-class CatalogueFormTests(SimpleTestCase):
 
-    def setUp(self):
+class CatalogueViewTest(TestCase):
+    def test_book_list(self):
+        Book_1 = Catalogue.objects.create(
+            title='Django for Beginners',
+            ISBN='3943-3434-4345',
+            author='John Doe',
+            price =8.90,
+            availability='true',  
+        )
+
+        Book_2 = Catalogue.objects.create(
+            title='Django for Professionals (2020)', 
+            ISBN='978-1-60309-3', 
+            author='Mary Doe',
+            price=11.99,
+            availability='false'
+        )
+        response = self.client.get(reverse('home'))
+
+        #self.assertIn('Django for Professionals (2020)', response.content.decode())
+        self.assertIn('John Doe', response.content.decode())
+        #self.assertIn('978-1-60309-3', response.content.decode())
+
+class CatalogueTemplateTest(TestCase):
+    def test_homepage_template(self): #check for the template used in the response to the client request
+        response = self.client.get(reverse('home'))
+        self.assertTemplateUsed(response,'home.html')
+
+    def test_homepage_contains_correct_html(self): #check for html elements in the response
+        response=self.client.get(reverse('home'))
+        self.assertContains(response,'E-library Application')
+
+class CatalogueFormTests(TestCase):
+
+    def setUp(self): #set up the test client
         url = reverse('home')
         self.response = self.client.get(url)
 
@@ -27,8 +60,8 @@ class CatalogueFormTests(SimpleTestCase):
         self.assertFalse(add_book_form.is_valid())
 
 
-class ElibraryURLsTest(SimpleTestCase):
-    def test_homepage_url(self):
+class ElibraryURLsTest(TestCase):
+    def test_homepage_url(self): #check if the response to client request is granted a proper response
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code,200)
         
