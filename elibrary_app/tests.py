@@ -13,6 +13,7 @@ class ElibraryURLsTest(SimpleTestCase):
         
     def test_root_url_resloves_to_homepage_view(self):
         found = resolve('/')
+        self.assertEqual(found.func,home)
 
 class CatalogueModelTest(TestCase):
 
